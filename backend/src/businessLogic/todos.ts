@@ -21,6 +21,7 @@ export async function getTodos(userId: string): Promise<TodoItem[]> {
   return await todosAccess.getTodoItems(userId)
 }
 
+//this function creates todo and returns a promise
 export async function createTodo(userId: string, createTodoRequest: CreateTodoRequest): Promise<TodoItem> {
   const todoId = uuid.v4()
 
@@ -40,17 +41,18 @@ export async function createTodo(userId: string, createTodoRequest: CreateTodoRe
   return newItem
 }
 
+//this function updateTodo and returns an  
 export async function updateTodo(userId: string, todoId: string, updateTodoRequest: UpdateTodoRequest) {
   logger.info(`Updating todo ${todoId} for user ${userId}`, { userId, todoId, todoUpdate: updateTodoRequest })
 
   const item = await todosAccess.getTodoItem(todoId)
 
   if (!item)
-    throw new Error('Item not found')  // FIXME: 404?
+    throw new Error('Item not found')  
 
   if (item.userId !== userId) {
     logger.error(`User ${userId} does not have permission to update todo ${todoId}`)
-    throw new Error('User is not authorized to update item')  // FIXME: 403?
+    throw new Error('User is not authorized to update item')  
   }
 
   todosAccess.updateTodoItem(todoId, updateTodoRequest as TodoUpdate)
@@ -62,11 +64,11 @@ export async function deleteTodo(userId: string, todoId: string) {
   const item = await todosAccess.getTodoItem(todoId)
 
   if (!item)
-    throw new Error('Item not found')  // FIXME: 404?
+    throw new Error('Item not found')  
 
   if (item.userId !== userId) {
     logger.error(`User ${userId} does not have permission to delete todo ${todoId}`)
-    throw new Error('User is not authorized to delete item')  // FIXME: 403?
+    throw new Error('User is not authorized to delete item')  
   }
 
   todosAccess.deleteTodoItem(todoId)
