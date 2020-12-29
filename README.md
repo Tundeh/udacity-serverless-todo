@@ -269,3 +269,8 @@ Right click on the imported collection to set variables for the collection:
 Provide variables for the collection (similarly to how this was done in the course):
 
 ![Alt text](images/import-collection-5.png?raw=true "Image 5")
+
+
+Acknowledgements
+
+This project was bootstrapped with https://github.com/udacity/cloud-developer/tree/master/course-04/project/c4-final-project-starter-code
