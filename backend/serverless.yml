@@ -7,16 +7,26 @@ plugins:
 
 provider:
   name: aws
-  runtime: nodejs8.10
+  runtime: nodejs12.x
 
   stage: ${opt:stage, 'dev'}
-  region: ${opt:region, 'us-east-1'}
+  region: ${opt:region, 'us-east-2'}
+
+  environment:
+    TODOS_TABLE: Todos-${self:provider.stage}
+    TODOS_BY_USER_INDEX: TodosByUserIndex
+    ATTACHMENTS_S3_BUCKET: todos-attachments-${self:provider.stage}
+    SIGNED_URL_EXPIRATION: 300
+    AUTH_0_JWKS_URL: https://dev-vbycqvu7.us.auth0.com/.well-known/jwks.json
+
+  tracing:
+    lambda: true
+    apiGateway: true
 
 functions:
-
   Auth:
     handler: src/lambda/auth/auth0Authorizer.handler
- GetTodos:
+  GetTodos:
     handler: src/lambda/http/getTodos.handler
     events:
       - http:
@@ -42,7 +52,7 @@ functions:
           - xray:GetGroup
           - xray:PutTraceSegments
         Resource:
-          - "*"
+          - '*'
 
   CreateTodo:
     handler: src/lambda/http/createTodo.handler
@@ -70,7 +80,7 @@ functions:
           - xray:GetGroup
           - xray:PutTraceSegments
         Resource:
-          - "*"
+          - '*'
 
   UpdateTodo:
     handler: src/lambda/http/updateTodo.handler
@@ -99,7 +109,7 @@ functions:
           - xray:GetGroup
           - xray:PutTraceSegments
         Resource:
-          - "*"
+          - '*'
 
   DeleteTodo:
     handler: src/lambda/http/deleteTodo.handler
@@ -128,7 +138,7 @@ functions:
           - xray:GetGroup
           - xray:PutTraceSegments
         Resource:
-          - "*"
+          - '*'
 
   GenerateUploadUrl:
     handler: src/lambda/http/generateUploadUrl.handler
@@ -161,10 +171,10 @@ functions:
           - xray:GetGroup
           - xray:PutTraceSegments
         Resource:
-          - "*"
+          - '*'
 
 resources:
-   Resources:
+  Resources:
     # API Gateway
     GatewayResponseDefault4XX:
       Type: AWS::ApiGateway::GatewayResponse
@@ -227,7 +237,7 @@ resources:
       Properties:
         PolicyDocument:
           Id: MyPolicy
-          Version: "2012-10-17"
+          Version: '2012-10-17'
           Statement:
             - Sid: PublicReadForGetBucketObjects
               Effect: Allow
