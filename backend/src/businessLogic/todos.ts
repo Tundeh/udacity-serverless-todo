@@ -24,7 +24,9 @@ export async function getTodos(userId: string): Promise<TodoItem[]> {
 //this function creates todo and returns a promise
 export async function createTodo(userId: string, createTodoRequest: CreateTodoRequest): Promise<TodoItem> {
   const todoId = uuid.v4()
-
+  if(!createTodoRequest.name){
+    throw new Error("Todo name must be included")
+  }
   const newItem: TodoItem = {
     userId,
     todoId,
